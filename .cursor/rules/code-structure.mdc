@@ -1,0 +1,182 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Cursor Assistant Rules
+
+## Documentation Maintenance
+
+### Before Each Task
+1. Review current state:
+   - Check `docs/PROGRESS.md` for current status
+   - Review `docs/CHECKLIST.md` for dependencies
+   - Verify `docs/STRUCTURE.md` for file locations
+   - Consult `docs/API_COVERAGE.md` for API status
+
+2. Plan implementation:
+   - Identify all files that need to be created/modified
+   - List dependencies and prerequisites
+   - Note any API endpoints or events that will be covered
+
+### During Implementation
+1. File Creation/Modification:
+   - Follow patterns in `docs/ARCHITECTURE.md`
+   - Maintain consistent file structure
+   - Add necessary imports
+   - Include JSDoc comments
+   - Add type definitions
+
+2. Real-time Updates:
+   - Update `docs/STRUCTURE.md` when creating new files
+   - Mark items in `docs/PROGRESS.md` as in-progress
+   - Update `docs/API_COVERAGE.md` for new endpoints/events
+
+### After Implementation
+1. Documentation Updates:
+   - Mark completed items in `docs/CHECKLIST.md`
+   - Update status in `docs/PROGRESS.md`
+   - Add coverage in `docs/API_COVERAGE.md`
+   - Update file details in `docs/STRUCTURE.md`
+
+2. Verification:
+   - Ensure all affected docs are updated
+   - Verify consistency across all docs
+   - Check for any missed dependencies
+
+## Implementation Rules
+
+### Code Structure
+1. File Organization:
+   ```typescript
+   // 1. Imports
+   import { ... } from '...';
+   
+   // 2. Types/Interfaces
+   interface Options { ... }
+   
+   // 3. Class/Function Implementation
+   export class Example { ... }
+   ```
+
+2. Documentation Format:
+   ```typescript
+   /**
+    * Description
+    * @param {Type} name - Description
+    * @returns {Type} Description
+    * @throws {Error} Description
+    */
+   ```
+
+3. Error Handling:
+   ```typescript
+   try {
+     // Operation
+   } catch (error) {
+     // Specific error handling
+     throw new CustomError(`Context: ${  error.message}`);
+   }
+   ```
+
+### Status Indicators
+- ✅ Complete
+- 🚧 In Progress
+- 📅 Planned
+
+## File Update Rules
+
+### PROGRESS.md
+```markdown
+### Category
+- [x] Completed Item ✅
+- [ ] Current Task 🚧
+- [ ] Planned Task 📅
+```
+
+### STRUCTURE.md
+```markdown
+### Directory
+- `file.ts` ✅
+  - Purpose
+  - Key features
+```
+
+### API_COVERAGE.md
+```markdown
+### Category
+- [x] /endpoint ✅
+- [ ] /current-endpoint 🚧
+- [ ] /planned-endpoint 📅
+```
+
+### CHECKLIST.md
+```markdown
+### Feature
+- [x] Completed Task
+  - [x] Subtask 1
+  - [x] Subtask 2
+```
+
+## Response Format
+
+1. Task Analysis:
+   ```markdown
+   ## Current Task
+   - Implementing: [feature]
+   - Dependencies: [list]
+   - Files Affected: [list]
+   ```
+
+2. Implementation Plan:
+   ```markdown
+   ## Implementation
+   1. Create/modify files
+   2. Update documentation
+   3. Verify changes
+   ```
+
+3. Documentation Updates:
+   ```markdown
+   ## Updates
+   - PROGRESS.md: [changes]
+   - STRUCTURE.md: [changes]
+   - API_COVERAGE.md: [changes]
+   - CHECKLIST.md: [changes]
+   ```
+
+## Best Practices
+
+1. Documentation:
+   - Keep documentation atomic and focused
+   - Update docs immediately after code changes
+   - Use consistent formatting
+   - Include examples where helpful
+
+2. Code:
+   - Follow TypeScript best practices
+   - Maintain consistent style
+   - Write self-documenting code
+   - Include error handling
+
+3. Testing:
+   - Write tests alongside features
+   - Cover edge cases
+   - Document test scenarios
+
+## Error Prevention
+
+1. Before Implementation:
+   - Double-check dependencies
+   - Verify file locations
+   - Review related documentation
+
+2. During Implementation:
+   - Follow established patterns
+   - Update docs in real-time
+   - Maintain consistency
+
+3. After Implementation:
+   - Verify all docs are updated
+   - Check for missed items
+   - Ensure consistency 
