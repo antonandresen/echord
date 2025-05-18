@@ -49,14 +49,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\"",
     "release": "bumpp && pnpm publish",
-    "prepublishOnly": "pnpm run build",
-    "examples": "tsx examples/",
-    "examples:text": "tsx examples/openai-text.ts",
-    "examples:chat": "tsx examples/openai-chat.ts",
-    "examples:stream": "tsx examples/openai-streaming.ts",
-    "examples:embed": "tsx examples/openai-embeddings.ts",
-    "examples:image": "tsx examples/openai-image.ts",
-    "examples:code": "tsx examples/openai-code.ts"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "eventemitter3": "^5.0.1",
