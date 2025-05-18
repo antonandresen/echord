@@ -62,6 +62,14 @@
 - [x] Channel structure
   - [x] Base class
   - [x] Type variants
+    - [x] Text channels
+    - [x] Voice channels
+    - [x] Category channels
+    - [x] DM channels
+    - [x] Thread channels
+    - [x] Stage channels
+    - [x] Forum channels
+    - [x] Media channels
   - [x] Methods
 - [x] Message structure
   - [x] Properties
@@ -179,21 +187,21 @@
 - [ ] OAuth2 flows
 
 ### Channels 🚧
-- [ ] Channel management
-  - [ ] Create/Update/Delete
-  - [ ] Permissions
-  - [ ] Invites
-- [ ] Message operations
+- [x] Channel management
+  - [x] Create/Update/Delete
+  - [x] Permissions
+  - [x] Invites
+- [x] Message operations
   - [x] Send messages
   - [x] Edit messages
   - [x] Delete messages
   - [ ] Bulk delete
   - [ ] Pins
   - [ ] Reactions
-- [ ] Threads
-  - [ ] Create/Manage threads
-  - [ ] Member management
-  - [ ] Archive operations
+- [x] Threads
+  - [x] Create/Manage threads
+  - [x] Member management
+  - [x] Archive operations
 
 ### Guilds 🚧
 - [ ] Guild management
@@ -276,7 +284,7 @@
 - [x] CHANNEL_UPDATE
 - [x] CHANNEL_DELETE
 - [ ] CHANNEL_PINS_UPDATE
-- [ ] THREAD_*
+- [x] THREAD_*
 
 ### Message Events 🚧
 - [x] MESSAGE_CREATE

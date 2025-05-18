@@ -1,17 +1,10 @@
 import type { Client } from '../client/Client'
-import type { MemberData, Snowflake } from '../types'
-import { Base } from './Base'
-import type { Guild } from './Guild'
-import type { Role } from './Role'
-import type { User } from './User'
-
-/**
- * Avatar URL options
- */
-interface AvatarURLOptions {
-  format?: 'webp' | 'png' | 'jpg' | 'jpeg' | 'gif'
-  size?: 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048 | 4096
-}
+import type {
+  AvatarURLOptions,
+  MemberData,
+  Snowflake,
+} from '../types/structures'
+import { Base, type Guild, type Role, type User } from '.'
 
 /**
  * Represents a guild member
@@ -83,8 +76,8 @@ export class Member extends Base {
    */
   public getRoles(): Role[] {
     return Array.from(this.roles)
-      .map((id) => this.guild.roles.get(id)!)
-      .filter(Boolean)
+      .map((id) => this.guild.roles.get(id))
+      .filter((role): role is Role => role !== undefined)
   }
 
   /**

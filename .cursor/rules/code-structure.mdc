@@ -13,6 +13,7 @@ alwaysApply: true
    - Review `docs/CHECKLIST.md` for dependencies
    - Verify `docs/STRUCTURE.md` for file locations
    - Consult `docs/API_COVERAGE.md` for API status
+   - Just check all files in the `docs` folder, and keep them updated.
 
 2. Plan implementation:
    - Identify all files that need to be created/modified
