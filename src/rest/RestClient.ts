@@ -2,27 +2,20 @@ import fetch from 'node-fetch'
 import type { Client } from '../client/Client'
 import type {
   HTTPMethod,
-  RateLimitData,
   RequestOptions,
   RESTClientOptions,
   RESTResponse,
 } from '../types/rest'
-import { RequestQueue } from './RequestQueue.js'
 
 /**
  * REST client for making API requests
  */
 export class RESTClient {
-  private readonly client: Client
   private readonly baseURL: string
   private readonly version: number
   private readonly token: string
-  private readonly apiBase = 'https://discord.com/api/v10'
-  private readonly queues = new Map<string, RequestQueue>()
-  private globalQueue: RequestQueue | null = null
 
   constructor(client: Client, options: RESTClientOptions = {}) {
-    this.client = client
     this.baseURL = options.baseURL ?? 'https://discord.com/api'
     this.version = options.version ?? 10
     this.token = client.token ?? ''
@@ -107,74 +100,57 @@ export class RESTClient {
   ): Promise<RESTResponse<T>> {
     const url = `${this.baseURL}/v${this.version}${path}`
     const headers: Record<string, string> = {
-      Authorization: `Bot ${this.token}`,
       'User-Agent': 'echord (https://github.com/antonandresen/echord, 1.0.0)',
       'Content-Type': 'application/json',
       ...options.headers,
     }
 
-    if (options.reason) {
+    if (options.reason !== null && options.reason !== undefined && options.reason !== '') {
       headers['X-Audit-Log-Reason'] = options.reason
+    }
+
+    // Add authorization header if token is provided
+    if (this.token !== null && this.token !== '') {
+      headers.Authorization = `Bot ${this.token}`
     }
 
     const response = await fetch(url, {
       method,
       headers,
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      body: options.body !== null && options.body !== undefined ? JSON.stringify(options.body) : undefined,
     })
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        const data = (await response.json()) as RateLimitData
-        throw new Error(`Rate limited: Retry after ${data.retry_after} seconds`)
+    // Handle rate limiting
+    if (response.status === 429) {
+      const retryAfter = response.headers.get('retry-after')
+      if (retryAfter !== null && retryAfter !== '') {
+        const delay = parseInt(retryAfter, 10) * 1000
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        return this.request(method, path, options)
       }
-      throw new Error(`HTTP Error ${response.status}: ${response.statusText}`)
+    }
+
+    // Handle global rate limiting
+    const globalRateLimit = response.headers.get('x-ratelimit-global')
+    if (globalRateLimit !== null && globalRateLimit === 'true') {
+      const retryAfter = response.headers.get('retry-after')
+      if (retryAfter !== null && retryAfter !== '') {
+        const delay = parseInt(retryAfter, 10) * 1000
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        return this.request(method, path, options)
+      }
+    }
+
+    if (response.status >= 400) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(`HTTP ${response.status}: ${JSON.stringify(errorData)}`)
     }
 
     const contentType = response.headers.get('content-type')
-    if (contentType?.includes('application/json')) {
+    if (contentType?.includes('application/json') === true) {
       return response.json() as Promise<RESTResponse<T>>
     }
 
     return (await response.text()) as unknown as RESTResponse<T>
-  }
-
-  /**
-   * Get or create a queue for a bucket
-   */
-  private getQueue(bucket: string, limit: number): RequestQueue {
-    let queue = this.queues.get(bucket)
-    if (!queue) {
-      queue = new RequestQueue(bucket, limit)
-      this.queues.set(bucket, queue)
-    }
-    return queue
-  }
-
-  /**
-   * Get the bucket for an endpoint by making a dummy request
-   */
-  private async getBucket(
-    method: string,
-    endpoint: string,
-  ): Promise<string | null> {
-    try {
-      const url = `${this.apiBase}${endpoint}`
-      const response = await fetch(url, {
-        method,
-        headers: {
-          Authorization: `Bot ${this.token}`,
-        },
-      })
-
-      const bucket = response.headers.get('x-ratelimit-bucket')
-      return bucket
-    } catch {
-      return null
-    }
-  }
-
-  private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }

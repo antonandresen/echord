@@ -1,10 +1,11 @@
 import type { User } from '../structures/User'
+import type { Snowflake } from '../types'
 import { DiscordCache, type DiscordCacheOptions } from './DiscordCache'
 
 /**
  * Cache for User entities
  */
-export class UserCache extends DiscordCache<User> {
+export class UserCache extends DiscordCache<Snowflake, User> {
   constructor(options: DiscordCacheOptions = {}) {
     super({
       ...options,
@@ -22,7 +23,7 @@ export class UserCache extends DiscordCache<User> {
     const predicate = exact
       ? (user: User) => user.username === username
       : (user: User) =>
-          user.username.toLowerCase().includes(username.toLowerCase())
+        user.username.toLowerCase().includes(username.toLowerCase())
     return this.findOne(predicate)
   }
 
@@ -35,7 +36,7 @@ export class UserCache extends DiscordCache<User> {
     const predicate = exact
       ? (user: User) => user.username === username
       : (user: User) =>
-          user.username.toLowerCase().includes(username.toLowerCase())
+        user.username.toLowerCase().includes(username.toLowerCase())
     return this.findMany(predicate)
   }
 

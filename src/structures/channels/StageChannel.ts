@@ -24,7 +24,7 @@ export class StageChannel extends VoiceChannel {
   /**
    * Get the stage instance in this channel
    */
-  public async getStageInstance(): Promise<any> {
+  public async getStageInstance(): Promise<unknown> {
     return await this.client.rest.get(`/stage-instances/${this.id}`)
   }
 

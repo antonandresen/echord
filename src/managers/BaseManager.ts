@@ -35,11 +35,11 @@ export abstract class BaseManager<K, Holds> {
    * Adds an entry to the cache
    */
   protected add(data: unknown, cache = true, id?: K): Holds {
-    const existing = id ? this.cache.get(id) : null
-    if (existing) return existing
+    const existing = id !== undefined ? this.cache.get(id) : null
+    if (existing !== null && existing !== undefined) return existing
 
     const entry = this.resolve(data)
-    if (cache) {
+    if (cache === true) {
       const key = id ?? this.resolveKey(data)
       this.cache.set(key, entry)
     }

@@ -71,18 +71,18 @@ export class GatewayClient extends EventEmitter {
     if (this.compress) {
       const inflator = new Inflate()
       inflator.push(data, true)
-      payload = JSON.parse(inflator.result as string)
+      payload = JSON.parse(inflator.result as string) as GatewayPayload
     } else {
-      payload = JSON.parse(data.toString())
+      payload = JSON.parse(data.toString()) as GatewayPayload
     }
 
     const { op, d, s, t } = payload
 
-    if (s) this.sequence = s
+    if (s !== null && s !== undefined) this.sequence = s
 
     switch (op) {
       case GatewayOpCodes.Dispatch:
-        if (t) this.handleDispatch(t, d)
+        if (t !== null && t !== undefined) this.handleDispatch(t, d)
         break
       case GatewayOpCodes.Heartbeat:
         this.sendHeartbeat()
@@ -96,7 +96,7 @@ export class GatewayClient extends EventEmitter {
         }, 5000)
         break
       case GatewayOpCodes.Hello:
-        if (d && typeof d === 'object' && 'heartbeat_interval' in d) {
+        if (d !== null && d !== undefined && typeof d === 'object' && 'heartbeat_interval' in d) {
           this.startHeartbeat(d.heartbeat_interval as number)
         }
         break
@@ -109,14 +109,9 @@ export class GatewayClient extends EventEmitter {
   private handleDispatch(event: string, data: unknown): void {
     switch (event) {
       case GatewayDispatchEvents.Ready:
-        if (
-          typeof data === 'object' &&
-          data &&
-          'session_id' in data &&
-          'resume_gateway_url' in data
-        ) {
-          this.sessionId = data.session_id as string
-          this.resumeGatewayUrl = data.resume_gateway_url as string
+        if (this.isReadyData(data)) {
+          this.sessionId = data.session_id
+          this.resumeGatewayUrl = data.resume_gateway_url
         }
         break
       case GatewayDispatchEvents.Resumed:
@@ -127,12 +122,23 @@ export class GatewayClient extends EventEmitter {
     this.emit(event, data)
   }
 
+  private isReadyData(data: unknown): data is { session_id: string; resume_gateway_url: string } {
+    return (
+      typeof data === 'object' &&
+      data !== null &&
+      'session_id' in data &&
+      'resume_gateway_url' in data &&
+      typeof (data as { session_id: unknown }).session_id === 'string' &&
+      typeof (data as { resume_gateway_url: unknown }).resume_gateway_url === 'string'
+    )
+  }
+
   private onError(error: Error): void {
     this.emit('error', error)
   }
 
   private onClose(code: number, reason: string): void {
-    if (this.heartbeatInterval) {
+    if (this.heartbeatInterval !== null) {
       clearInterval(this.heartbeatInterval)
       this.heartbeatInterval = null
     }
@@ -140,7 +146,7 @@ export class GatewayClient extends EventEmitter {
     this.emit('close', { code, reason })
 
     // Attempt to resume if we have the required data
-    if (this.sessionId && this.sequence) {
+    if (this.sessionId !== null && this.sessionId !== '' && this.sequence !== null && this.sequence !== 0) {
       this.resume()
     } else {
       // Otherwise reconnect with a new session
@@ -167,7 +173,7 @@ export class GatewayClient extends EventEmitter {
   }
 
   private resume(): void {
-    if (!this.ws || !this.sessionId || !this.sequence) return
+    if (this.ws === null || this.sessionId === null || this.sessionId === '' || this.sequence === null || this.sequence === 0) return
 
     const payload: GatewayPayload = {
       op: GatewayOpCodes.Resume,
@@ -202,7 +208,7 @@ export class GatewayClient extends EventEmitter {
   }
 
   private sendHeartbeat(): void {
-    if (!this.ws) return
+    if (this.ws === null) return
 
     const payload: GatewayPayload = {
       op: GatewayOpCodes.Heartbeat,
@@ -218,7 +224,7 @@ export class GatewayClient extends EventEmitter {
       this.ws = null
     }
 
-    if (this.resumeGatewayUrl) {
+    if (this.resumeGatewayUrl !== null && this.resumeGatewayUrl !== '') {
       this.connect(this.resumeGatewayUrl)
     } else {
       this.connect()

@@ -34,7 +34,7 @@ export class GuildManager extends SnowflakeManager<Guild> {
     id: Snowflake,
     options: { force?: boolean } = {},
   ): Promise<Guild> {
-    if (!options.force) {
+    if (options.force !== true) {
       const existing = this.cache.get(id)
       if (existing) return existing
     }
@@ -125,9 +125,11 @@ export class GuildManager extends SnowflakeManager<Guild> {
     this.cache.delete(id)
   }
 
-  protected _add(data: APIGuild): Guild {
+  protected _add(data: APIGuild, cache = true): Guild {
     const guild = new Guild(this.client, data as unknown as GuildData)
-    this.cache.set(guild.id, guild)
+    if (cache === true) {
+      this.cache.set(guild.id, guild)
+    }
     return guild
   }
 }

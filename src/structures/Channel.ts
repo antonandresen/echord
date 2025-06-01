@@ -1,6 +1,7 @@
 import { ChannelType } from '../types/api'
 import type { Client } from '../client/Client'
 import type { Snowflake } from '../types'
+import type { ChannelData } from '../types/structures'
 import { Base } from './Base'
 
 /**
@@ -53,60 +54,60 @@ export class Channel extends Base {
   public defaultSortOrder: number | null
   public defaultForumLayout: number
 
-  constructor(client: Client, data: any) {
+  constructor(client: Client, data: ChannelData) {
     super(client, data.id)
-    this.type = data.type
-    this.guildId = data.guild_id
+    this.type = data.type as ChannelType
+    this.guildId = data.guild_id ?? null
     this.position = data.position ?? 0
-    this.name = data.name
-    this.topic = data.topic
+    this.name = data.name ?? ''
+    this.topic = data.topic ?? null
     this.nsfw = data.nsfw ?? false
-    this.lastMessageId = data.last_message_id
+    this.lastMessageId = data.last_message_id ?? null
     this.bitrate = data.bitrate ?? 0
     this.userLimit = data.user_limit ?? 0
     this.rateLimitPerUser = data.rate_limit_per_user ?? 0
-    this.recipients = data.recipients ?? []
-    this.icon = data.icon
-    this.ownerId = data.owner_id
-    this.applicationId = data.application_id
-    this.parentId = data.parent_id
-    this.lastPinTimestamp = data.last_pin_timestamp
+    this.recipients = data.recipients?.map(user => user.id) ?? []
+    this.icon = data.icon ?? null
+    this.ownerId = data.owner_id ?? null
+    this.applicationId = data.application_id ?? null
+    this.parentId = data.parent_id ?? null
+    this.lastPinTimestamp = data.last_pin_timestamp !== null && data.last_pin_timestamp !== undefined
       ? new Date(data.last_pin_timestamp)
       : null
-    this.rtcRegion = data.rtc_region
+    this.rtcRegion = data.rtc_region ?? null
     this.videoQualityMode = data.video_quality_mode ?? 1
     this.messageCount = data.message_count ?? 0
     this.memberCount = data.member_count ?? 0
     this.threadMetadata = data.thread_metadata
       ? {
-          archived: data.thread_metadata.archived,
-          autoArchiveDuration: data.thread_metadata.auto_archive_duration,
-          archiveTimestamp: new Date(data.thread_metadata.archive_timestamp),
-          locked: data.thread_metadata.locked,
-          invitable: data.thread_metadata.invitable,
-        }
+        archived: data.thread_metadata.archived,
+        autoArchiveDuration: data.thread_metadata.auto_archive_duration,
+        archiveTimestamp: new Date(data.thread_metadata.archive_timestamp),
+        locked: data.thread_metadata.locked,
+        invitable: data.thread_metadata.invitable,
+      }
       : null
-    this.permissions = data.permissions
+    this.permissions = data.permissions ?? '0'
     this.flags = data.flags ?? 0
     this.totalMessageSent = data.total_message_sent ?? 0
     this.availableTags =
-      data.available_tags?.map((tag: any) => ({
+      data.available_tags?.map((tag) => ({
         id: tag.id,
         name: tag.name,
         moderated: tag.moderated,
-        emojiId: tag.emoji_id,
-        emojiName: tag.emoji_name,
+        emojiId: tag.emoji_id ?? null,
+        emojiName: tag.emoji_name ?? null,
       })) ?? []
     this.appliedTags = data.applied_tags ?? []
     this.defaultReactionEmoji = data.default_reaction_emoji
       ? {
-          emojiId: data.default_reaction_emoji.emoji_id,
-          emojiName: data.default_reaction_emoji.emoji_name,
-        }
+        emojiId: data.default_reaction_emoji.emoji_id ?? null,
+        emojiName: data.default_reaction_emoji.emoji_name ?? null,
+      }
       : null
     this.defaultThreadRateLimitPerUser =
       data.default_thread_rate_limit_per_user ?? 0
-    this.defaultSortOrder = data.default_sort_order
+    this.defaultSortOrder = data.default_sort_order ?? null
     this.defaultForumLayout = data.default_forum_layout ?? 0
   }
 

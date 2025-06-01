@@ -153,6 +153,7 @@ export interface ChannelData extends BaseData {
  */
 export interface MessageData extends BaseData {
   channel_id: Snowflake
+  guild_id?: Snowflake
   author: UserData
   content: string
   timestamp: string

@@ -1,3 +1,10 @@
+import type { Message } from '../structures/Message'
+import type { Guild } from '../structures/Guild'
+import type { Member } from '../structures/Member'
+import type { Role } from '../structures/Role'
+import type { Channel } from '../structures/Channel'
+import type { User } from '../structures/User'
+
 /**
  * Options for a client instance
  */
@@ -50,87 +57,87 @@ export interface ClientEvents {
   /**
    * Emitted when a message is created
    */
-  messageCreate: (message: any) => void
+  messageCreate: (message: Message) => void
 
   /**
    * Emitted when a message is updated
    */
-  messageUpdate: (oldMessage: any | null, newMessage: any) => void
+  messageUpdate: (oldMessage: Message | null, newMessage: Message) => void
 
   /**
    * Emitted when a message is deleted
    */
-  messageDelete: (message: any) => void
+  messageDelete: (message: Message) => void
 
   /**
    * Emitted when a guild becomes available
    */
-  guildCreate: (guild: any) => void
+  guildCreate: (guild: Guild) => void
 
   /**
    * Emitted when a guild member is added
    */
-  guildMemberAdd: (member: any) => void
+  guildMemberAdd: (member: Member) => void
 
   /**
    * Emitted when a guild member is removed
    */
-  guildMemberRemove: (member: any) => void
+  guildMemberRemove: (member: Member) => void
 
   /**
    * Emitted when a guild member is updated
    */
-  guildMemberUpdate: (oldMember: any | null, newMember: any) => void
+  guildMemberUpdate: (oldMember: Member | null, newMember: Member) => void
 
   /**
    * Emitted when a guild role is created
    */
-  roleCreate: (role: any) => void
+  roleCreate: (role: Role) => void
 
   /**
    * Emitted when a guild role is updated
    */
-  roleUpdate: (oldRole: any | null, newRole: any) => void
+  roleUpdate: (oldRole: Role | null, newRole: Role) => void
 
   /**
    * Emitted when a guild role is deleted
    */
-  roleDelete: (role: any) => void
+  roleDelete: (role: Role) => void
 
   /**
    * Emitted when a channel is created
    */
-  channelCreate: (channel: any) => void
+  channelCreate: (channel: Channel) => void
 
   /**
    * Emitted when a channel is updated
    */
-  channelUpdate: (oldChannel: any | null, newChannel: any) => void
+  channelUpdate: (oldChannel: Channel | null, newChannel: Channel) => void
 
   /**
    * Emitted when a channel is deleted
    */
-  channelDelete: (channel: any) => void
+  channelDelete: (channel: Channel) => void
 
   /**
    * Emitted when a user starts typing in a channel
    */
-  typingStart: (typing: any) => void
+  typingStart: (typing: unknown) => void
 
   /**
    * Emitted when a user's presence is updated
    */
-  presenceUpdate: (oldPresence: any | null, newPresence: any) => void
+  presenceUpdate: (oldPresence: unknown | null, newPresence: unknown) => void
 
   /**
    * Emitted when a user is updated
    */
-  userUpdate: (oldUser: any | null, newUser: any) => void
+  userUpdate: (oldUser: User | null, newUser: User) => void
 
   /**
    * Emitted when a voice state is updated
    */
-  voiceStateUpdate: (oldState: any | null, newState: any) => void
+  voiceStateUpdate: (oldState: unknown | null, newState: unknown) => void
 
   /**
    * Emitted when the client's session is invalidated
@@ -155,7 +162,7 @@ export interface ClientEvents {
   /**
    * Emitted when a rate limit is hit
    */
-  rateLimit: (rateLimitInfo: any) => void
+  rateLimit: (rateLimitInfo: unknown) => void
 
   /**
    * Emitted when a shard becomes ready

@@ -10,21 +10,15 @@ import { UserCache } from './UserCache'
 import type { DiscordCacheOptions } from './DiscordCache'
 
 /**
- * Manages all caches for the client
+ * Cache manager for Discord entities
  */
 export class CacheManager {
-  private readonly client: Client
-  private readonly options: DiscordCacheOptions
-
   public readonly guilds: GuildCache
   public readonly channels: ChannelCache
   public readonly messages: MessageCache
   public readonly users: UserCache
 
-  constructor(client: Client, options: DiscordCacheOptions = {}) {
-    this.client = client
-    this.options = options
-
+  constructor(_client: Client, options: DiscordCacheOptions = {}) {
     // Initialize caches with their specific options
     this.guilds = new GuildCache({
       ...options,

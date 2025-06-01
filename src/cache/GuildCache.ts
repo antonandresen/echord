@@ -1,11 +1,12 @@
 import type { Guild } from '../structures/Guild'
 import type { GuildFeature } from '../types/api'
+import type { Snowflake } from '../types'
 import { DiscordCache, type DiscordCacheOptions } from './DiscordCache'
 
 /**
  * Cache for Guild entities
  */
-export class GuildCache extends DiscordCache<Guild> {
+export class GuildCache extends DiscordCache<Snowflake, Guild> {
   constructor(options: DiscordCacheOptions = {}) {
     super({
       ...options,
@@ -59,8 +60,10 @@ export class GuildCache extends DiscordCache<Guild> {
    * @param permission The permission to check for
    */
   public findByPermission(permission: bigint): Guild[] {
-    return this.findMany(
-      (guild) => (guild.permissions & permission) === permission,
-    )
+    return this.findMany((guild) => {
+      if (guild.permissions === undefined) return false
+      const perms = typeof guild.permissions === 'string' ? BigInt(guild.permissions) : guild.permissions
+      return (perms & permission) === permission
+    })
   }
 }

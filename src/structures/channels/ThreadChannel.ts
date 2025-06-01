@@ -17,7 +17,10 @@ export class ThreadChannel extends TextChannel {
 
   constructor(client: Client, data: ChannelData) {
     super(client, data)
-    const metadata = data.thread_metadata!
+    const metadata = data.thread_metadata
+    if (!metadata) {
+      throw new Error('Thread metadata is required for ThreadChannel')
+    }
     this.archived = metadata.archived
     this.autoArchiveDuration = metadata.auto_archive_duration
     this.archiveTimestamp = new Date(metadata.archive_timestamp)
@@ -65,7 +68,15 @@ export class ThreadChannel extends TextChannel {
    * @param archived Whether to archive or unarchive
    */
   public async setArchived(archived: boolean): Promise<this> {
-    return await this.edit({ thread_metadata: { archived } })
+    return await this.edit({
+      thread_metadata: {
+        archived,
+        auto_archive_duration: this.autoArchiveDuration,
+        archive_timestamp: this.archiveTimestamp.toISOString(),
+        locked: this.locked,
+        invitable: this.invitable,
+      }
+    })
   }
 
   /**
@@ -73,7 +84,15 @@ export class ThreadChannel extends TextChannel {
    * @param locked Whether to lock or unlock
    */
   public async setLocked(locked: boolean): Promise<this> {
-    return await this.edit({ thread_metadata: { locked } })
+    return await this.edit({
+      thread_metadata: {
+        archived: this.archived,
+        auto_archive_duration: this.autoArchiveDuration,
+        archive_timestamp: this.archiveTimestamp.toISOString(),
+        locked,
+        invitable: this.invitable,
+      }
+    })
   }
 
   /**
@@ -81,7 +100,15 @@ export class ThreadChannel extends TextChannel {
    * @param invitable Whether the thread is invitable
    */
   public async setInvitable(invitable: boolean): Promise<this> {
-    return await this.edit({ thread_metadata: { invitable } })
+    return await this.edit({
+      thread_metadata: {
+        archived: this.archived,
+        auto_archive_duration: this.autoArchiveDuration,
+        archive_timestamp: this.archiveTimestamp.toISOString(),
+        locked: this.locked,
+        invitable,
+      }
+    })
   }
 
   /**
@@ -92,7 +119,13 @@ export class ThreadChannel extends TextChannel {
     duration: 60 | 1440 | 4320 | 10080,
   ): Promise<this> {
     return await this.edit({
-      thread_metadata: { auto_archive_duration: duration },
+      thread_metadata: {
+        archived: this.archived,
+        auto_archive_duration: duration,
+        archive_timestamp: this.archiveTimestamp.toISOString(),
+        locked: this.locked,
+        invitable: this.invitable,
+      },
     })
   }
 }

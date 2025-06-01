@@ -4,16 +4,17 @@ interface QueuedRequest {
   execute: () => Promise<unknown>
 }
 
+/**
+ * Queue for managing rate-limited requests
+ */
 export class RequestQueue {
+  private readonly limit: number
   private queue: QueuedRequest[] = []
   private processing = false
-  private readonly limit: number
   private remaining: number
   private reset: number
-  private readonly bucket: string
 
-  constructor(bucket: string, limit: number) {
-    this.bucket = bucket
+  constructor(_bucket: string, limit: number) {
     this.limit = limit
     this.remaining = limit
     this.reset = Date.now()

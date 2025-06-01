@@ -84,14 +84,14 @@ export class Client extends EventEmitter {
    * The time the client became ready
    */
   public get readyAt(): Date | null {
-    return this.readyTimestamp ? new Date(this.readyTimestamp) : null
+    return this.readyTimestamp !== null ? new Date(this.readyTimestamp) : null
   }
 
   /**
    * How long the client has been ready for in milliseconds
    */
   public get uptime(): number | null {
-    return this.readyTimestamp ? Date.now() - this.readyTimestamp : null
+    return this.readyTimestamp !== null ? Date.now() - this.readyTimestamp : null
   }
 
   /**
@@ -99,7 +99,7 @@ export class Client extends EventEmitter {
    * @param token Token of the account to log in with
    */
   public async login(token: string): Promise<string> {
-    if (!token || typeof token !== 'string') {
+    if (!token || typeof token !== 'string' || token.length === 0) {
       throw new Error('TOKEN_INVALID')
     }
 
@@ -109,7 +109,7 @@ export class Client extends EventEmitter {
       await this.ws.connect()
       return this.token
     } catch (error) {
-      await this.destroy()
+      this.destroy()
       throw error
     }
   }
@@ -117,8 +117,8 @@ export class Client extends EventEmitter {
   /**
    * Logs out, terminates the connection to Discord, and destroys the client
    */
-  public async destroy(): Promise<void> {
-    await this.ws.destroy()
+  public destroy(): void {
+    this.ws.destroy()
     this.token = null
     this.user = null
     this.readyTimestamp = null
@@ -137,7 +137,7 @@ export class Client extends EventEmitter {
    * @param permissions The permissions to request
    */
   public generateInvite(permissions = '0'): string {
-    if (!this.user) {
+    if (this.user === null) {
       throw new Error('CLIENT_NOT_READY')
     }
 
@@ -147,6 +147,6 @@ export class Client extends EventEmitter {
       permissions,
     })
 
-    return `https://discord.com/oauth2/authorize?${query}`
+    return `https://discord.com/oauth2/authorize?${query.toString()}`
   }
 }

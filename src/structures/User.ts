@@ -53,7 +53,7 @@ export class User extends Base {
    * @param options Options for the avatar URL
    */
   public avatarURL(options: AvatarURLOptions = {}): string | null {
-    if (!this.avatar) return null
+    if (this.avatar === null || this.avatar === undefined || this.avatar === '') return null
     const format =
       options.format ?? (this.avatar.startsWith('a_') ? 'gif' : 'webp')
     const size = options.size ?? 1024
@@ -65,7 +65,7 @@ export class User extends Base {
    * @param options Options for the banner URL
    */
   public bannerURL(options: AvatarURLOptions = {}): string | null {
-    if (!this.banner) return null
+    if (this.banner === null || this.banner === undefined || this.banner === '') return null
     const format =
       options.format ?? (this.banner.startsWith('a_') ? 'gif' : 'webp')
     const size = options.size ?? 1024
@@ -76,7 +76,7 @@ export class User extends Base {
    * The URL to the user's avatar decoration
    */
   public avatarDecorationURL(): string | null {
-    if (!this.avatarDecoration) return null
+    if (this.avatarDecoration === null || this.avatarDecoration === undefined || this.avatarDecoration === '') return null
     return `https://cdn.discordapp.com/avatar-decorations/${this.id}/${this.avatarDecoration}.png`
   }
 

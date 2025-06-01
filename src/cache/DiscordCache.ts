@@ -1,4 +1,3 @@
-import type { Snowflake } from '../types'
 import { BaseCache, type CacheOptions } from './BaseCache'
 
 /**
@@ -27,19 +26,23 @@ export interface DiscordCacheOptions extends CacheOptions {
    * @default 300000 (5 minutes)
    */
   sweepInterval?: number
+
+  /**
+   * Maximum age in milliseconds for entities to be considered expired
+   * @default null (no maximum age)
+   */
+  maxAge?: number | null
 }
 
 /**
  * Base class for Discord entity caches
  */
-export class DiscordCache<V> extends BaseCache<Snowflake, V> {
+export class DiscordCache<K, V> extends BaseCache<K, V> {
   constructor(options: DiscordCacheOptions = {}) {
     super({
-      maxSize: options.maxSize ?? 1000,
-      ttl: options.keepForever ? null : (options.ttl ?? 3600000),
-      sweepInterval: options.keepForever
-        ? null
-        : (options.sweepInterval ?? 300000),
+      maxSize: options.maxSize ?? Infinity,
+      ttl: options.ttl ?? null,
+      sweepInterval: options.sweepInterval ?? null,
     })
   }
 
@@ -47,7 +50,7 @@ export class DiscordCache<V> extends BaseCache<Snowflake, V> {
    * Get multiple entities from the cache
    * @param keys The keys of the entities to get
    */
-  public getMany(keys: Snowflake[]): V[] {
+  public getMany(keys: K[]): V[] {
     return keys
       .map((key) => this.get(key))
       .filter((v): v is V => v !== undefined)
@@ -57,7 +60,7 @@ export class DiscordCache<V> extends BaseCache<Snowflake, V> {
    * Set multiple entities in the cache
    * @param entries The entries to set
    */
-  public setMany(entries: [Snowflake, V][]): this {
+  public setMany(entries: [K, V][]): this {
     for (const [key, value] of entries) {
       this.set(key, value)
     }
@@ -68,7 +71,7 @@ export class DiscordCache<V> extends BaseCache<Snowflake, V> {
    * Delete multiple entities from the cache
    * @param keys The keys of the entities to delete
    */
-  public deleteMany(keys: Snowflake[]): number {
+  public deleteMany(keys: K[]): number {
     let count = 0
     for (const key of keys) {
       if (this.delete(key)) count++

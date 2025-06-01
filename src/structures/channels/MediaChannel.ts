@@ -22,7 +22,7 @@ export class MediaChannel extends ForumChannel {
   public async createMediaPost(options: {
     name: string
     content?: string
-    files: any[]
+    files: unknown[]
     tags?: Snowflake[]
   }): Promise<Message> {
     if (!options.files?.length) {

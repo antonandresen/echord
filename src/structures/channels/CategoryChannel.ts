@@ -15,9 +15,13 @@ export class CategoryChannel extends BaseChannel {
    * Get all channels in this category
    */
   public getChildren(): BaseChannel[] {
-    return this.client.channels
-      .findMany((channel: BaseChannel) => channel.parentId === this.id)
-      .sort((a: BaseChannel, b: BaseChannel) => a.position - b.position)
+    const channels: BaseChannel[] = []
+    for (const channel of this.client.channels.cache.values()) {
+      if (channel.parentId === this.id) {
+        channels.push(channel)
+      }
+    }
+    return channels.sort((a, b) => a.position - b.position)
   }
 
   /**

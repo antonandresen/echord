@@ -25,16 +25,20 @@ export class Member extends Base {
   constructor(client: Client, guild: Guild, data: MemberData) {
     super(client, data.user.id)
     this.guild = guild
-    this.user = client.users.get(data.user.id)!
+    const user = client.users.get(data.user.id)
+    if (!user) {
+      throw new Error(`User ${data.user.id} not found in cache`)
+    }
+    this.user = user
     this.roles = new Set(data.roles)
     this.joinedAt = new Date(data.joined_at)
-    this.premiumSince = data.premium_since
+    this.premiumSince = data.premium_since !== null && data.premium_since !== undefined
       ? new Date(data.premium_since)
       : undefined
     this.deaf = data.deaf ?? false
     this.mute = data.mute ?? false
     this.pending = data.pending ?? false
-    this.communicationDisabledUntil = data.communication_disabled_until
+    this.communicationDisabledUntil = data.communication_disabled_until !== null && data.communication_disabled_until !== undefined
       ? new Date(data.communication_disabled_until)
       : undefined
     this.nick = data.nick
@@ -45,7 +49,7 @@ export class Member extends Base {
    * The member's display name
    */
   public get displayName(): string {
-    return this.nick ?? this.user.username
+    return this.nick !== null && this.nick !== undefined && this.nick !== '' ? this.nick : this.user.username
   }
 
   /**
@@ -53,7 +57,7 @@ export class Member extends Base {
    * @param options Avatar options
    */
   public displayAvatarURL(options: AvatarURLOptions = {}): string {
-    if (this.avatar) {
+    if (this.avatar !== null && this.avatar !== undefined && this.avatar !== '') {
       const format = options.format ?? 'webp'
       const size = options.size ?? 1024
       return `https://cdn.discordapp.com/guilds/${this.guild.id}/users/${this.id}/avatars/${this.avatar}.${format}?size=${size}`
@@ -65,10 +69,9 @@ export class Member extends Base {
    * Whether the member is timed out
    */
   public get isTimedOut(): boolean {
-    return Boolean(
-      this.communicationDisabledUntil &&
-        this.communicationDisabledUntil.getTime() > Date.now(),
-    )
+    return this.communicationDisabledUntil !== null &&
+      this.communicationDisabledUntil !== undefined &&
+      this.communicationDisabledUntil.getTime() > Date.now()
   }
 
   /**
@@ -94,7 +97,11 @@ export class Member extends Base {
    */
   public hasPermission(permission: bigint): boolean {
     // Get all roles including @everyone
-    const roles = [...this.getRoles(), this.guild.roles.get(this.guild.id)!]
+    const everyoneRole = this.guild.roles.get(this.guild.id)
+    const roles = [...this.getRoles()]
+    if (everyoneRole) {
+      roles.push(everyoneRole)
+    }
     // Check if any role has the permission
     return roles.some((role) => (role.permissions & permission) === permission)
   }

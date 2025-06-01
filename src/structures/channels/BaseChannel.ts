@@ -44,8 +44,19 @@ export abstract class BaseChannel extends Base {
    * @param data The data to edit
    */
   public async edit(data: Partial<ChannelData>): Promise<this> {
-    const response = await this.client.rest.patch(`/channels/${this.id}`, data)
-    return this.client.channels._add(response) as this
+    const response = await this.client.rest.patch<ChannelData>(`/channels/${this.id}`, data)
+
+    // Update this instance with the new data
+    this.position = response.position ?? this.position
+    this.name = response.name ?? this.name
+    this.topic = response.topic ?? this.topic
+    this.nsfw = response.nsfw ?? this.nsfw
+    this.parentId = response.parent_id ?? this.parentId
+    this.rateLimitPerUser = response.rate_limit_per_user ?? this.rateLimitPerUser
+    this.permissions = response.permissions ?? this.permissions
+    this.flags = response.flags ?? this.flags
+
+    return this
   }
 
   /**

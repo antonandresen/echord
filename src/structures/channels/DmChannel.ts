@@ -5,7 +5,7 @@ import type {
   Snowflake,
   UserData,
 } from '../../types/structures'
-import type { Message } from '../Message'
+import { Message } from '../Message'
 import type { User } from '../User'
 import { BaseChannel } from './BaseChannel'
 
@@ -33,20 +33,37 @@ export class DmChannel extends BaseChannel {
   }
 
   /**
-   * Send a message in this channel
-   * @param content The message content or options
+   * Send a message to this channel
+   * @param content The content of the message
+   * @param options Additional message options
    */
   public async send(
-    content: string | { content?: string; embeds?: any[]; files?: any[] },
-  ): Promise<Message> {
-    const data = typeof content === 'string' ? { content } : content
+    content: string,
+    options: Record<string, unknown> = {},
+  ): Promise<unknown> {
+    return this.client.rest.post(`/channels/${this.id}/messages`, {
+      content,
+      ...options,
+    })
+  }
 
-    const response = await this.client.rest.post<MessageData>(
-      `/channels/${this.id}/messages`,
-      data,
-    )
+  /**
+   * Fetch messages from this channel
+   * @param options Fetch options
+   */
+  public async fetchMessages(options: {
+    limit?: number
+    before?: string
+    after?: string
+    around?: string
+  } = {}): Promise<unknown[]> {
+    const params = new URLSearchParams()
+    if (options.limit !== null && options.limit !== undefined && options.limit !== 0) params.append('limit', options.limit.toString())
+    if (options.before !== null && options.before !== undefined && options.before !== '') params.append('before', options.before)
+    if (options.after !== null && options.after !== undefined && options.after !== '') params.append('after', options.after)
+    if (options.around !== null && options.around !== undefined && options.around !== '') params.append('around', options.around)
 
-    return this.client.channels._add(response)
+    return this.client.rest.get(`/channels/${this.id}/messages?${params.toString()}`)
   }
 
   /**
@@ -66,14 +83,14 @@ export class DmChannel extends BaseChannel {
     } = {},
   ): Promise<Message[]> {
     const query = new URLSearchParams()
-    if (options.limit) query.set('limit', options.limit.toString())
-    if (options.before) query.set('before', options.before)
-    if (options.after) query.set('after', options.after)
-    if (options.around) query.set('around', options.around)
+    if (options.limit !== null && options.limit !== undefined && options.limit !== 0) query.set('limit', options.limit.toString())
+    if (options.before !== null && options.before !== undefined && options.before !== '') query.set('before', options.before)
+    if (options.after !== null && options.after !== undefined && options.after !== '') query.set('after', options.after)
+    if (options.around !== null && options.around !== undefined && options.around !== '') query.set('around', options.around)
 
-    const path = `/channels/${this.id}/messages${query.toString() ? `?${query}` : ''}`
+    const path = `/channels/${this.id}/messages${query.toString() ? `?${query.toString()}` : ''}`
     const messages = await this.client.rest.get<MessageData[]>(path)
-    return messages.map((m) => this.client.channels._add(m))
+    return messages.map((m) => new Message(this.client, m))
   }
 
   /**
@@ -83,7 +100,7 @@ export class DmChannel extends BaseChannel {
     const messages = await this.client.rest.get<MessageData[]>(
       `/channels/${this.id}/pins`,
     )
-    return messages.map((m) => this.client.channels._add(m))
+    return messages.map((m) => new Message(this.client, m))
   }
 
   /**

@@ -1,11 +1,12 @@
 import { ChannelType } from '../types/api'
 import type { Channel } from '../structures/Channel'
+import type { Snowflake } from '../types'
 import { DiscordCache, type DiscordCacheOptions } from './DiscordCache'
 
 /**
  * Cache for Channel entities
  */
-export class ChannelCache extends DiscordCache<Channel> {
+export class ChannelCache extends DiscordCache<Snowflake, Channel> {
   constructor(options: DiscordCacheOptions = {}) {
     super({
       ...options,
@@ -23,7 +24,7 @@ export class ChannelCache extends DiscordCache<Channel> {
     const predicate = exact
       ? (channel: Channel) => channel.name === name
       : (channel: Channel) =>
-          channel.name.toLowerCase().includes(name.toLowerCase())
+        channel.name.toLowerCase().includes(name.toLowerCase())
     return this.findOne(predicate)
   }
 
@@ -36,7 +37,7 @@ export class ChannelCache extends DiscordCache<Channel> {
     const predicate = exact
       ? (channel: Channel) => channel.name === name
       : (channel: Channel) =>
-          channel.name.toLowerCase().includes(name.toLowerCase())
+        channel.name.toLowerCase().includes(name.toLowerCase())
     return this.findMany(predicate)
   }
 
@@ -111,9 +112,9 @@ export class ChannelCache extends DiscordCache<Channel> {
   public findThreads(): Channel[] {
     return this.findMany(
       (channel) =>
-        channel.type === ChannelType.GUILD_PUBLIC_THREAD ||
-        channel.type === ChannelType.GUILD_PRIVATE_THREAD ||
-        channel.type === ChannelType.GUILD_NEWS_THREAD,
+        channel.type === ChannelType.PUBLIC_THREAD ||
+        channel.type === ChannelType.PRIVATE_THREAD ||
+        channel.type === ChannelType.ANNOUNCEMENT_THREAD,
     )
   }
 }

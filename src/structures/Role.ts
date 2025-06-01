@@ -58,13 +58,13 @@ export class Role extends Base {
     this.mentionable = data.mentionable
     this.tags = data.tags
       ? {
-          botId: data.tags.bot_id,
-          integrationId: data.tags.integration_id,
-          premiumSubscriber: data.tags.premium_subscriber,
-          subscriptionListingId: data.tags.subscription_listing_id,
-          availableForPurchase: data.tags.available_for_purchase,
-          guildConnections: data.tags.guild_connections,
-        }
+        botId: data.tags.bot_id,
+        integrationId: data.tags.integration_id,
+        premiumSubscriber: data.tags.premium_subscriber,
+        subscriptionListingId: data.tags.subscription_listing_id,
+        availableForPurchase: data.tags.available_for_purchase,
+        guildConnections: data.tags.guild_connections,
+      }
       : undefined
   }
 
@@ -72,7 +72,7 @@ export class Role extends Base {
    * The role's icon URL
    */
   public get iconURL(): string | null {
-    if (!this.icon) return null
+    if (this.icon === null || this.icon === undefined || this.icon === '') return null
     return `https://cdn.discordapp.com/role-icons/${this.id}/${this.icon}.webp`
   }
 

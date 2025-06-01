@@ -58,8 +58,8 @@ export class Emoji extends Base {
    */
   public getRoles(): Role[] {
     return Array.from(this.roles)
-      .map((id) => this.guild.roles.get(id)!)
-      .filter(Boolean)
+      .map((id) => this.guild.roles.get(id))
+      .filter((role): role is Role => role !== undefined)
   }
 
   /**

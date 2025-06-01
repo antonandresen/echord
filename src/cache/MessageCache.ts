@@ -6,7 +6,7 @@ import { DiscordCache, type DiscordCacheOptions } from './DiscordCache'
 /**
  * Cache for Message entities
  */
-export class MessageCache extends DiscordCache<Message> {
+export class MessageCache extends DiscordCache<Snowflake, Message> {
   constructor(options: DiscordCacheOptions = {}) {
     super({
       ...options,
@@ -26,7 +26,7 @@ export class MessageCache extends DiscordCache<Message> {
     const predicate = exact
       ? (message: Message) => message.content === content
       : (message: Message) =>
-          message.content.toLowerCase().includes(content.toLowerCase())
+        message.content.toLowerCase().includes(content.toLowerCase())
     return this.findOne(predicate)
   }
 
@@ -39,7 +39,7 @@ export class MessageCache extends DiscordCache<Message> {
     const predicate = exact
       ? (message: Message) => message.content === content
       : (message: Message) =>
-          message.content.toLowerCase().includes(content.toLowerCase())
+        message.content.toLowerCase().includes(content.toLowerCase())
     return this.findMany(predicate)
   }
 

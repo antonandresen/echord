@@ -40,6 +40,7 @@ export class BaseCache<K, V> extends Collection<K, V> {
   ) => boolean
   private sweepTimer: NodeJS.Timeout | null = null
   private readonly accessOrder: Map<K, number> = new Map()
+  private readonly ttls: Map<K, number> = new Map()
 
   constructor(options: CacheOptions = {}) {
     super()
@@ -48,7 +49,7 @@ export class BaseCache<K, V> extends Collection<K, V> {
     this.sweepInterval = options.sweepInterval ?? null
     this.sweepFilter = options.sweepFilter
 
-    if (this.sweepInterval) {
+    if (this.sweepInterval !== null && this.sweepInterval > 0) {
       this.sweepTimer = setInterval(() => this.sweep(), this.sweepInterval)
     }
   }
@@ -88,6 +89,7 @@ export class BaseCache<K, V> extends Collection<K, V> {
    */
   public override delete(key: K): boolean {
     this.accessOrder.delete(key)
+    this.ttls.delete(key)
     return super.delete(key)
   }
 
@@ -96,6 +98,7 @@ export class BaseCache<K, V> extends Collection<K, V> {
    */
   public override clear(): void {
     this.accessOrder.clear()
+    this.ttls.clear()
     super.clear()
   }
 
@@ -112,9 +115,9 @@ export class BaseCache<K, V> extends Collection<K, V> {
 
     for (const [key, value] of this.entries()) {
       const accessTime = this.accessOrder.get(key) ?? 0
-      const expired = this.ttl && now - accessTime > this.ttl
+      const expired = this.ttl !== null && now - accessTime > this.ttl
 
-      if (expired || (sweepFilter && sweepFilter(value, key, this))) {
+      if (expired || sweepFilter?.(value, key, this) === true) {
         this.delete(key)
         count++
       }
@@ -137,7 +140,7 @@ export class BaseCache<K, V> extends Collection<K, V> {
       }
     }
 
-    if (oldestKey) {
+    if (oldestKey !== null) {
       this.delete(oldestKey)
     }
   }
@@ -146,9 +149,22 @@ export class BaseCache<K, V> extends Collection<K, V> {
    * Stop the sweep interval
    */
   public destroy(): void {
-    if (this.sweepTimer) {
+    if (this.sweepTimer !== null) {
       clearInterval(this.sweepTimer)
       this.sweepTimer = null
+    }
+  }
+
+  /**
+   * Set the TTL for an item
+   * @param key The key to set TTL for
+   * @param ttl The TTL in milliseconds
+   */
+  public setTTL(key: K, ttl: number): void {
+    if (ttl > 0) {
+      this.ttls.set(key, Date.now() + ttl)
+    } else {
+      this.ttls.delete(key)
     }
   }
 }

@@ -4,7 +4,7 @@ import type {
   MessageData,
   Snowflake,
 } from '../../types/structures'
-import type { Message } from '../Message'
+import { Message } from '../Message'
 import { TextChannel } from './TextChannel'
 
 /**
@@ -33,17 +33,38 @@ export class AnnouncementChannel extends TextChannel {
     const response = await this.client.rest.post<MessageData>(
       `/channels/${this.id}/messages/${messageId}/crosspost`,
     )
-    return this.client.channels._add(response)
+    return new Message(this.client, response)
   }
 
   /**
    * Send a message and automatically crosspost it
-   * @param content The message content or options
+   * @param content The message content
+   * @param options Additional message options
    */
   public async sendAndCrosspost(
-    content: string | { content?: string; embeds?: any[]; files?: any[] },
+    content: string,
+    options: Record<string, unknown> = {},
   ): Promise<Message> {
-    const message = await this.send(content)
+    const message = await this.send(content, options)
     return this.crosspostMessage(message.id)
+  }
+
+  /**
+   * Send a message to this channel
+   * @param content The content of the message
+   * @param options Additional message options
+   */
+  public async send(
+    content: string,
+    options: Record<string, unknown> = {},
+  ): Promise<Message> {
+    const response = await this.client.rest.post<MessageData>(
+      `/channels/${this.id}/messages`,
+      {
+        content,
+        ...options,
+      },
+    )
+    return new Message(this.client, response)
   }
 }

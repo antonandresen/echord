@@ -99,10 +99,9 @@ export class Guild extends Base {
    * The URL to this guild's icon.
    */
   public get iconURL(): string | null {
-    return this.icon
-      ? `https://cdn.discordapp.com/icons/${this.id}/${this.icon}.${
-          this.icon.startsWith('a_') ? 'gif' : 'png'
-        }`
+    return this.icon !== null && this.icon !== ''
+      ? `https://cdn.discordapp.com/icons/${this.id}/${this.icon}.${this.icon.startsWith('a_') ? 'gif' : 'png'
+      }`
       : null
   }
 
@@ -110,10 +109,9 @@ export class Guild extends Base {
    * The URL to this guild's banner.
    */
   public get bannerURL(): string | null {
-    return this.banner
-      ? `https://cdn.discordapp.com/banners/${this.id}/${this.banner}.${
-          this.banner.startsWith('a_') ? 'gif' : 'png'
-        }`
+    return this.banner !== null && this.banner !== ''
+      ? `https://cdn.discordapp.com/banners/${this.id}/${this.banner}.${this.banner.startsWith('a_') ? 'gif' : 'png'
+      }`
       : null
   }
 
@@ -121,7 +119,7 @@ export class Guild extends Base {
    * The URL to this guild's splash.
    */
   public get splashURL(): string | null {
-    return this.splash
+    return this.splash !== null && this.splash !== ''
       ? `https://cdn.discordapp.com/splashes/${this.id}/${this.splash}.png`
       : null
   }
@@ -130,7 +128,7 @@ export class Guild extends Base {
    * The URL to this guild's discovery splash.
    */
   public get discoverySplashURL(): string | null {
-    return this.discoverySplash
+    return this.discoverySplash !== null && this.discoverySplash !== ''
       ? `https://cdn.discordapp.com/discovery-splashes/${this.id}/${this.discoverySplash}.png`
       : null
   }
@@ -160,6 +158,8 @@ export class Guild extends Base {
    * The permissions number for the guild.
    */
   public get permissionsNumber(): bigint | null {
-    return this.permissions ? BigInt(this.permissions) : null
+    return this.permissions !== null && this.permissions !== undefined && this.permissions !== ''
+      ? BigInt(this.permissions)
+      : null
   }
 }

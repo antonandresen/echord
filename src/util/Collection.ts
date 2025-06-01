@@ -163,14 +163,14 @@ export class Collection<K, V> extends Map<K, V> {
   public first(amount?: number): V | V[] | undefined {
     if (typeof amount === 'undefined') {
       const first = this.values().next()
-      return first.done ? undefined : first.value
+      return first.done === true ? undefined : first.value
     }
     if (amount < 0) return this.last(amount * -1)
     amount = Math.min(this.size, amount)
     const iter = this.values()
     return Array.from({ length: amount }, () => {
       const val = iter.next()
-      return val.done ? undefined : val.value
+      return val.done === true ? undefined : val.value
     }).filter((val): val is V => val !== undefined)
   }
 

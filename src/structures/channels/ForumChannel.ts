@@ -4,7 +4,7 @@ import type {
   MessageData,
   Snowflake,
 } from '../../types/structures'
-import type { Message } from '../Message'
+import { Message } from '../Message'
 import { BaseChannel } from './BaseChannel'
 
 /**
@@ -48,8 +48,8 @@ export class ForumChannel extends BaseChannel {
   public async createPost(options: {
     name: string
     content?: string
-    embeds?: any[]
-    files?: any[]
+    embeds?: unknown[]
+    files?: unknown[]
     tags?: Snowflake[]
   }): Promise<Message> {
     const { name, content, embeds, files, tags } = options
@@ -70,7 +70,7 @@ export class ForumChannel extends BaseChannel {
       },
     )
 
-    return this.client.channels._add(response)
+    return new Message(this.client, response)
   }
 
   /**
@@ -99,9 +99,9 @@ export class ForumChannel extends BaseChannel {
     return await this.edit({
       default_reaction_emoji: emoji
         ? {
-            emoji_id: emoji.id,
-            emoji_name: emoji.name,
-          }
+          emoji_id: emoji.id,
+          emoji_name: emoji.name,
+        }
         : undefined,
     })
   }
