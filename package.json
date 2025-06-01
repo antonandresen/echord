@@ -1,6 +1,6 @@
 {
   "name": "echord",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "packageManager": "pnpm@10.11.0",
   "description": "A modern, type-safe Discord API wrapper",
   "type": "module",
