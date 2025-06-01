@@ -15,11 +15,24 @@ export class Collection<K, V> extends Map<K, V> {
    * @param fn The function to test with (should return boolean)
    * @param count The number of values to get
    */
-  public find<T extends V>(fn: (value: V, key: K, collection: this) => value is T): T | undefined
-  public find(fn: (value: V, key: K, collection: this) => boolean): V | undefined
-  public find<T extends V>(fn: (value: V, key: K, collection: this) => value is T, count: number): T[]
-  public find(fn: (value: V, key: K, collection: this) => boolean, count: number): V[]
-  public find(fn: (value: V, key: K, collection: this) => boolean, count?: number): V | V[] | undefined {
+  public find<T extends V>(
+    fn: (value: V, key: K, collection: this) => value is T,
+  ): T | undefined
+  public find(
+    fn: (value: V, key: K, collection: this) => boolean,
+  ): V | undefined
+  public find<T extends V>(
+    fn: (value: V, key: K, collection: this) => value is T,
+    count: number,
+  ): T[]
+  public find(
+    fn: (value: V, key: K, collection: this) => boolean,
+    count: number,
+  ): V[]
+  public find(
+    fn: (value: V, key: K, collection: this) => boolean,
+    count?: number,
+  ): V | V[] | undefined {
     if (typeof count === 'undefined') {
       for (const [key, val] of this) {
         if (fn(val, key, this)) return val
@@ -42,9 +55,15 @@ export class Collection<K, V> extends Map<K, V> {
    * Returns all values that match the filter
    * @param fn The function to test with (should return boolean)
    */
-  public filter<T extends V>(fn: (value: V, key: K, collection: this) => value is T): Collection<K, T>
-  public filter(fn: (value: V, key: K, collection: this) => boolean): Collection<K, V>
-  public filter<T extends V>(fn: (value: V, key: K, collection: this) => boolean): Collection<K, V> {
+  public filter<T extends V>(
+    fn: (value: V, key: K, collection: this) => value is T,
+  ): Collection<K, T>
+  public filter(
+    fn: (value: V, key: K, collection: this) => boolean,
+  ): Collection<K, V>
+  public filter(
+    fn: (value: V, key: K, collection: this) => boolean,
+  ): Collection<K, V> {
     const results = new Collection<K, V>()
     for (const [key, val] of this) {
       if (fn(val, key, this)) results.set(key, val)
@@ -68,7 +87,9 @@ export class Collection<K, V> extends Map<K, V> {
    * Maps each value to another value into a collection
    * @param fn Function that produces an element of the new collection
    */
-  public mapValues<T>(fn: (value: V, key: K, collection: this) => T): Collection<K, T> {
+  public mapValues<T>(
+    fn: (value: V, key: K, collection: this) => T,
+  ): Collection<K, T> {
     const results = new Collection<K, T>()
     for (const [key, val] of this) {
       results.set(key, fn(val, key, this))
@@ -103,7 +124,10 @@ export class Collection<K, V> extends Map<K, V> {
    * @param fn Function used to reduce (should return the new accumulator)
    * @param initialValue Starting value for the accumulator
    */
-  public reduce<T>(fn: (accumulator: T, value: V, key: K, collection: this) => T, initialValue: T): T {
+  public reduce<T>(
+    fn: (accumulator: T, value: V, key: K, collection: this) => T,
+    initialValue: T,
+  ): T {
     let accumulator = initialValue
     for (const [key, val] of this) {
       accumulator = fn(accumulator, val, key, this)
@@ -124,7 +148,10 @@ export class Collection<K, V> extends Map<K, V> {
       return arr[Math.floor(Math.random() * arr.length)]
     }
     if (!arr.length) return []
-    return Array.from({ length: Math.min(amount, arr.length) }, () => arr.splice(Math.floor(Math.random() * arr.length), 1)[0])
+    return Array.from(
+      { length: Math.min(amount, arr.length) },
+      () => arr.splice(Math.floor(Math.random() * arr.length), 1)[0],
+    )
   }
 
   /**
@@ -155,7 +182,7 @@ export class Collection<K, V> extends Map<K, V> {
   public last(amount: number): V[]
   public last(amount?: number): V | V[] | undefined {
     const arr = [...this.values()]
-    if (typeof amount === 'undefined') return arr[arr.length - 1]
+    if (typeof amount === 'undefined') return arr.at(-1)
     if (amount < 0) return this.first(amount * -1)
     if (!arr.length) return []
     return arr.slice(-amount)
@@ -210,4 +237,4 @@ export class Collection<K, V> extends Map<K, V> {
     }
     return true
   }
-} 
+}

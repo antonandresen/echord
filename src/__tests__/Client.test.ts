@@ -23,14 +23,11 @@ describe('Discord Client', () => {
       close: jest.fn().mockReturnThis(),
       removeAllListeners: jest.fn().mockReturnThis(),
     } as unknown as jest.Mocked<WebSocket>
-      ; (WebSocket as unknown as jest.Mock).mockImplementation(() => mockWs)
+    ;(WebSocket as unknown as jest.Mock).mockImplementation(() => mockWs)
 
     // Create a new client instance
-    client = new Client('fake-token', {
-      intents: Client.createIntents(
-        GatewayIntents.Guilds,
-        GatewayIntents.GuildMessages,
-      ),
+    client = new Client({
+      intents: GatewayIntents.Guilds | GatewayIntents.GuildMessages,
     })
   })
 
@@ -45,7 +42,7 @@ describe('Discord Client', () => {
       })
 
       // Attempt to login
-      await client.login()
+      await client.login('fake-token')
 
       // Verify WebSocket was created
       expect(WebSocket).toHaveBeenCalledWith(
@@ -85,11 +82,11 @@ describe('Discord Client', () => {
             content,
             channel_id: channelId,
           }),
-      } as Response
+      } satisfies Response
 
-        ; (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce(
-          mockResponse,
-        )
+      ;(fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce(
+        mockResponse,
+      )
 
       const message = await client.sendMessage(channelId, content)
 
@@ -121,11 +118,11 @@ describe('Discord Client', () => {
         ok: false,
         status: 403,
         statusText: 'Forbidden',
-      } as Response
+      } satisfies Response
 
-        ; (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce(
-          mockResponse,
-        )
+      ;(fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce(
+        mockResponse,
+      )
 
       await expect(client.sendMessage(channelId, content)).rejects.toThrow(
         'Failed to send message: 403 Forbidden',

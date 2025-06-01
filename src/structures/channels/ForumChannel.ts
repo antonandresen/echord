@@ -39,6 +39,11 @@ export class ForumChannel extends BaseChannel {
   /**
    * Create a post in this forum
    * @param options The post options
+   * @param options.name The name of the post
+   * @param options.content The content of the post
+   * @param options.embeds The embeds to include in the post
+   * @param options.files The files to include in the post
+   * @param options.tags The tags to apply to the post
    */
   public async createPost(options: {
     name: string
@@ -94,9 +99,9 @@ export class ForumChannel extends BaseChannel {
     return await this.edit({
       default_reaction_emoji: emoji
         ? {
-          emoji_id: emoji.id,
-          emoji_name: emoji.name,
-        }
+            emoji_id: emoji.id,
+            emoji_name: emoji.name,
+          }
         : undefined,
     })
   }

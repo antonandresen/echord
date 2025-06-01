@@ -67,7 +67,7 @@ export class Member extends Base {
   public get isTimedOut(): boolean {
     return Boolean(
       this.communicationDisabledUntil &&
-      this.communicationDisabledUntil.getTime() > Date.now(),
+        this.communicationDisabledUntil.getTime() > Date.now(),
     )
   }
 
@@ -183,6 +183,7 @@ export class Member extends Base {
   /**
    * Kick the member from the guild
    * @param options Kick options
+   * @param options.reason The reason for kicking the member
    */
   public async kick(options: { reason?: string } = {}): Promise<void> {
     await this.client.rest.delete(
@@ -194,6 +195,8 @@ export class Member extends Base {
   /**
    * Ban the member from the guild
    * @param options Ban options
+   * @param options.days Number of days of messages to delete
+   * @param options.reason The reason for banning the member
    */
   public async ban(
     options: { days?: number; reason?: string } = {},

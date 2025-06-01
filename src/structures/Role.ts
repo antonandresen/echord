@@ -58,13 +58,13 @@ export class Role extends Base {
     this.mentionable = data.mentionable
     this.tags = data.tags
       ? {
-        botId: data.tags.bot_id,
-        integrationId: data.tags.integration_id,
-        premiumSubscriber: data.tags.premium_subscriber,
-        subscriptionListingId: data.tags.subscription_listing_id,
-        availableForPurchase: data.tags.available_for_purchase,
-        guildConnections: data.tags.guild_connections,
-      }
+          botId: data.tags.bot_id,
+          integrationId: data.tags.integration_id,
+          premiumSubscriber: data.tags.premium_subscriber,
+          subscriptionListingId: data.tags.subscription_listing_id,
+          availableForPurchase: data.tags.available_for_purchase,
+          guildConnections: data.tags.guild_connections,
+        }
       : undefined
   }
 
@@ -160,6 +160,7 @@ export class Role extends Base {
   /**
    * Delete the role
    * @param options Delete options
+   * @param options.reason The reason for deleting the role
    */
   public async delete(options: { reason?: string } = {}): Promise<void> {
     await this.client.rest.delete(`/guilds/${this.guild.id}/roles/${this.id}`, {

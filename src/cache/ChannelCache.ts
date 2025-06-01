@@ -23,7 +23,7 @@ export class ChannelCache extends DiscordCache<Channel> {
     const predicate = exact
       ? (channel: Channel) => channel.name === name
       : (channel: Channel) =>
-        channel.name.toLowerCase().includes(name.toLowerCase())
+          channel.name.toLowerCase().includes(name.toLowerCase())
     return this.findOne(predicate)
   }
 
@@ -36,7 +36,7 @@ export class ChannelCache extends DiscordCache<Channel> {
     const predicate = exact
       ? (channel: Channel) => channel.name === name
       : (channel: Channel) =>
-        channel.name.toLowerCase().includes(name.toLowerCase())
+          channel.name.toLowerCase().includes(name.toLowerCase())
     return this.findMany(predicate)
   }
 

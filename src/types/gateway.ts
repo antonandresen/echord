@@ -88,7 +88,7 @@ export enum GatewayDispatchEvents {
  * @see https://discord.com/developers/docs/topics/gateway#gateway-intents
  */
 export enum GatewayIntentBits {
-  Guilds = 1 << 0,
+  Guilds = 1,
   GuildMembers = 1 << 1,
   GuildModeration = 1 << 2,
   GuildEmojisAndStickers = 1 << 3,
@@ -131,10 +131,10 @@ export enum GatewayCloseCodes {
 }
 
 export interface GatewayPayload {
-  op: GatewayOpCodes;
-  d?: unknown;
-  s?: number | null;
-  t?: string | null;
+  op: GatewayOpCodes
+  d?: unknown
+  s?: number | null
+  t?: string | null
 }
 
 export interface GatewayIdentifyData {

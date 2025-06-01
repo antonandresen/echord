@@ -1,7 +1,7 @@
 import { Guild } from '../structures/Guild'
 import type { Client } from '../client/Client'
-import type { Snowflake } from '../types'
 import type { APIGuild } from '../types/api'
+import type { GuildData, Snowflake } from '../types/structures'
 import { SnowflakeManager } from './SnowflakeManager'
 
 /**
@@ -28,6 +28,7 @@ export class GuildManager extends SnowflakeManager<Guild> {
    * Fetches a guild from Discord.
    * @param id The guild's ID
    * @param options Options for fetching the guild
+   * @param options.force Whether to force a fetch from Discord
    */
   public async fetch(
     id: Snowflake,
@@ -45,6 +46,18 @@ export class GuildManager extends SnowflakeManager<Guild> {
   /**
    * Creates a new guild.
    * @param options Options for creating the guild
+   * @param options.name The name of the guild
+   * @param options.icon The icon of the guild
+   * @param options.verificationLevel The verification level of the guild
+   * @param options.defaultMessageNotifications The default message notification level
+   * @param options.explicitContentFilter The explicit content filter level
+   * @param options.roles Array of roles to create
+   * @param options.channels Array of channels to create
+   * @param options.systemChannelId The system channel ID
+   * @param options.systemChannelFlags The system channel flags
+   * @param options.afkChannelId The AFK channel ID
+   * @param options.afkTimeout The AFK timeout in seconds
+   * @param options.region The voice region
    */
   public async create(options: {
     name: string
@@ -113,7 +126,7 @@ export class GuildManager extends SnowflakeManager<Guild> {
   }
 
   protected _add(data: APIGuild): Guild {
-    const guild = new Guild(this.client, data)
+    const guild = new Guild(this.client, data as unknown as GuildData)
     this.cache.set(guild.id, guild)
     return guild
   }

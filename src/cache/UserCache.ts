@@ -22,7 +22,7 @@ export class UserCache extends DiscordCache<User> {
     const predicate = exact
       ? (user: User) => user.username === username
       : (user: User) =>
-        user.username.toLowerCase().includes(username.toLowerCase())
+          user.username.toLowerCase().includes(username.toLowerCase())
     return this.findOne(predicate)
   }
 
@@ -35,7 +35,7 @@ export class UserCache extends DiscordCache<User> {
     const predicate = exact
       ? (user: User) => user.username === username
       : (user: User) =>
-        user.username.toLowerCase().includes(username.toLowerCase())
+          user.username.toLowerCase().includes(username.toLowerCase())
     return this.findMany(predicate)
   }
 

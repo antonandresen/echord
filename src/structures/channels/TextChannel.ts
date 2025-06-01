@@ -1,7 +1,6 @@
 import type { Client } from '../../client/Client'
 import type {
   ChannelData,
-  Message,
   MessageData,
   Snowflake,
 } from '../../types/structures'

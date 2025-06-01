@@ -25,7 +25,7 @@ export class RESTClient {
     this.client = client
     this.baseURL = options.baseURL ?? 'https://discord.com/api'
     this.version = options.version ?? 10
-    this.token = client.token
+    this.token = client.token ?? ''
   }
 
   /**
@@ -37,7 +37,7 @@ export class RESTClient {
     path: string,
     options: RequestOptions = {},
   ): Promise<RESTResponse<T>> {
-    return this.request<T>('GET', path, options)
+    return await this.request<T>('GET', path, options)
   }
 
   /**
@@ -51,7 +51,7 @@ export class RESTClient {
     body?: unknown,
     options: RequestOptions = {},
   ): Promise<RESTResponse<T>> {
-    return this.request<T>('POST', path, { ...options, body })
+    return await this.request<T>('POST', path, { ...options, body })
   }
 
   /**
@@ -65,7 +65,7 @@ export class RESTClient {
     body?: unknown,
     options: RequestOptions = {},
   ): Promise<RESTResponse<T>> {
-    return this.request<T>('PUT', path, { ...options, body })
+    return await this.request<T>('PUT', path, { ...options, body })
   }
 
   /**
@@ -79,7 +79,7 @@ export class RESTClient {
     body?: unknown,
     options: RequestOptions = {},
   ): Promise<RESTResponse<T>> {
-    return this.request<T>('PATCH', path, { ...options, body })
+    return await this.request<T>('PATCH', path, { ...options, body })
   }
 
   /**
@@ -91,7 +91,7 @@ export class RESTClient {
     path: string,
     options: RequestOptions = {},
   ): Promise<RESTResponse<T>> {
-    return this.request<T>('DELETE', path, options)
+    return await this.request<T>('DELETE', path, options)
   }
 
   /**
@@ -136,42 +136,7 @@ export class RESTClient {
       return response.json() as Promise<RESTResponse<T>>
     }
 
-    return response.text() as RESTResponse<T>
-  }
-
-  /**
-   * Helper method to GET from an endpoint
-   */
-  public get<T>(endpoint: string): Promise<T> {
-    return this.request<T>('GET', endpoint)
-  }
-
-  /**
-   * Helper method to POST to an endpoint
-   */
-  public post<T>(endpoint: string, body?: unknown): Promise<T> {
-    return this.request<T>('POST', endpoint, body)
-  }
-
-  /**
-   * Helper method to PUT to an endpoint
-   */
-  public put<T>(endpoint: string, body?: unknown): Promise<T> {
-    return this.request<T>('PUT', endpoint, body)
-  }
-
-  /**
-   * Helper method to PATCH an endpoint
-   */
-  public patch<T>(endpoint: string, body?: unknown): Promise<T> {
-    return this.request<T>('PATCH', endpoint, body)
-  }
-
-  /**
-   * Helper method to DELETE from an endpoint
-   */
-  public delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>('DELETE', endpoint)
+    return (await response.text()) as unknown as RESTResponse<T>
   }
 
   /**
@@ -212,21 +177,4 @@ export class RESTClient {
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms))
   }
-}
-
-/**
- * REST client options
- */
-interface RESTClientOptions {
-  baseURL?: string
-  version?: number
-}
-
-/**
- * Request options
- */
-interface RequestOptions {
-  headers?: Record<string, string>
-  reason?: string
-  body?: unknown
 }

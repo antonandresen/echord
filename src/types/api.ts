@@ -52,7 +52,7 @@ export enum GuildVerificationLevel {
   LOW = 1,
   MEDIUM = 2,
   HIGH = 3,
-  VERY_HIGH = 4
+  VERY_HIGH = 4,
 }
 
 /**
@@ -60,7 +60,7 @@ export enum GuildVerificationLevel {
  */
 export enum GuildDefaultMessageNotifications {
   ALL_MESSAGES = 0,
-  ONLY_MENTIONS = 1
+  ONLY_MENTIONS = 1,
 }
 
 /**
@@ -69,7 +69,7 @@ export enum GuildDefaultMessageNotifications {
 export enum GuildExplicitContentFilter {
   DISABLED = 0,
   MEMBERS_WITHOUT_ROLES = 1,
-  ALL_MEMBERS = 2
+  ALL_MEMBERS = 2,
 }
 
 /**
@@ -77,7 +77,7 @@ export enum GuildExplicitContentFilter {
  */
 export enum GuildMFALevel {
   NONE = 0,
-  ELEVATED = 1
+  ELEVATED = 1,
 }
 
 /**
@@ -118,10 +118,10 @@ export enum GuildFeature {
  * https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
  */
 export enum SystemChannelFlags {
-  SUPPRESS_JOIN_NOTIFICATIONS = 1 << 0,
+  SUPPRESS_JOIN_NOTIFICATIONS = 1,
   SUPPRESS_PREMIUM_SUBSCRIPTIONS = 1 << 1,
   SUPPRESS_GUILD_REMINDER_NOTIFICATIONS = 1 << 2,
-  SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3
+  SUPPRESS_JOIN_NOTIFICATION_REPLIES = 1 << 3,
 }
 
 /**
@@ -131,7 +131,7 @@ export enum GuildPremiumTier {
   NONE = 0,
   TIER_1 = 1,
   TIER_2 = 2,
-  TIER_3 = 3
+  TIER_3 = 3,
 }
 
 /**
@@ -141,7 +141,7 @@ export enum GuildNSFWLevel {
   DEFAULT = 0,
   EXPLICIT = 1,
   SAFE = 2,
-  AGE_RESTRICTED = 3
+  AGE_RESTRICTED = 3,
 }
 
 /**
@@ -228,7 +228,7 @@ export interface APISticker {
  */
 export enum StickerType {
   STANDARD = 1,
-  GUILD = 2
+  GUILD = 2,
 }
 
 /**
@@ -237,7 +237,7 @@ export enum StickerType {
 export enum StickerFormatType {
   PNG = 1,
   APNG = 2,
-  LOTTIE = 3
+  LOTTIE = 3,
 }
 
 /**
@@ -265,7 +265,7 @@ export interface APIUser {
  * https://discord.com/developers/docs/resources/user#user-object-user-flags
  */
 export enum UserFlags {
-  STAFF = 1 << 0,
+  STAFF = 1,
   PARTNER = 1 << 1,
   HYPESQUAD = 1 << 2,
   BUG_HUNTER_LEVEL_1 = 1 << 3,
@@ -279,7 +279,7 @@ export enum UserFlags {
   VERIFIED_DEVELOPER = 1 << 17,
   CERTIFIED_MODERATOR = 1 << 18,
   BOT_HTTP_INTERACTIONS = 1 << 19,
-  ACTIVE_DEVELOPER = 1 << 22
+  ACTIVE_DEVELOPER = 1 << 22,
 }
 
 /**
@@ -289,7 +289,7 @@ export enum PremiumType {
   NONE = 0,
   NITRO_CLASSIC = 1,
   NITRO = 2,
-  NITRO_BASIC = 3
+  NITRO_BASIC = 3,
 }
 
 /**
@@ -310,4 +310,4 @@ export enum ChannelType {
   GUILD_DIRECTORY = 14,
   GUILD_FORUM = 15,
   GUILD_MEDIA = 16,
-} 
+}

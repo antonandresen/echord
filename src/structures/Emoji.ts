@@ -84,6 +84,7 @@ export class Emoji extends Base {
   /**
    * Delete the emoji
    * @param options Delete options
+   * @param options.reason The reason for deleting the emoji
    */
   public async delete(options: { reason?: string } = {}): Promise<void> {
     await this.client.rest.delete(

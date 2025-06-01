@@ -159,9 +159,9 @@ export class Message extends Base {
       : null
     this.interaction = data.interaction
       ? {
-        ...data.interaction,
-        user: new User(client, data.interaction.user),
-      }
+          ...data.interaction,
+          user: new User(client, data.interaction.user),
+        }
       : undefined
     this.thread = data.thread
     this.components = data.components

@@ -79,12 +79,12 @@ export class Channel extends Base {
     this.memberCount = data.member_count ?? 0
     this.threadMetadata = data.thread_metadata
       ? {
-        archived: data.thread_metadata.archived,
-        autoArchiveDuration: data.thread_metadata.auto_archive_duration,
-        archiveTimestamp: new Date(data.thread_metadata.archive_timestamp),
-        locked: data.thread_metadata.locked,
-        invitable: data.thread_metadata.invitable,
-      }
+          archived: data.thread_metadata.archived,
+          autoArchiveDuration: data.thread_metadata.auto_archive_duration,
+          archiveTimestamp: new Date(data.thread_metadata.archive_timestamp),
+          locked: data.thread_metadata.locked,
+          invitable: data.thread_metadata.invitable,
+        }
       : null
     this.permissions = data.permissions
     this.flags = data.flags ?? 0
@@ -100,9 +100,9 @@ export class Channel extends Base {
     this.appliedTags = data.applied_tags ?? []
     this.defaultReactionEmoji = data.default_reaction_emoji
       ? {
-        emojiId: data.default_reaction_emoji.emoji_id,
-        emojiName: data.default_reaction_emoji.emoji_name,
-      }
+          emojiId: data.default_reaction_emoji.emoji_id,
+          emojiName: data.default_reaction_emoji.emoji_name,
+        }
       : null
     this.defaultThreadRateLimitPerUser =
       data.default_thread_rate_limit_per_user ?? 0

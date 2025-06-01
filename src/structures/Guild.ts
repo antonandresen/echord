@@ -100,8 +100,9 @@ export class Guild extends Base {
    */
   public get iconURL(): string | null {
     return this.icon
-      ? `https://cdn.discordapp.com/icons/${this.id}/${this.icon}.${this.icon.startsWith('a_') ? 'gif' : 'png'
-      }`
+      ? `https://cdn.discordapp.com/icons/${this.id}/${this.icon}.${
+          this.icon.startsWith('a_') ? 'gif' : 'png'
+        }`
       : null
   }
 
@@ -110,8 +111,9 @@ export class Guild extends Base {
    */
   public get bannerURL(): string | null {
     return this.banner
-      ? `https://cdn.discordapp.com/banners/${this.id}/${this.banner}.${this.banner.startsWith('a_') ? 'gif' : 'png'
-      }`
+      ? `https://cdn.discordapp.com/banners/${this.id}/${this.banner}.${
+          this.banner.startsWith('a_') ? 'gif' : 'png'
+        }`
       : null
   }
 

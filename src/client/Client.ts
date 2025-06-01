@@ -1,11 +1,11 @@
-import { EventEmitter } from 'events'
-import { WebSocketManager } from '../ws/WebSocketManager'
-import { RESTClient } from '../rest/RESTClient'
-import { GuildManager } from '../managers/GuildManager'
+import { EventEmitter } from 'node:events'
 import { ChannelManager } from '../managers/ChannelManager'
+import { GuildManager } from '../managers/GuildManager'
 import { UserManager } from '../managers/UserManager'
-import type { ClientOptions } from '../types/client'
+import { RESTClient } from '../rest/RestClient'
+import { WebSocketManager } from '../ws/WebSocketManager'
 import type { Snowflake } from '../types'
+import type { ClientOptions } from '../types/client'
 
 /**
  * The main hub for interacting with the Discord API
@@ -70,7 +70,7 @@ export class Client extends EventEmitter {
       shardCount: 1,
       closeTimeout: 5_000,
       retryLimit: 5,
-      ...options
+      ...options,
     }
 
     this.ws = new WebSocketManager(this)
@@ -104,13 +104,12 @@ export class Client extends EventEmitter {
     }
 
     this.token = token
-    this.rest.setToken(token)
 
     try {
       await this.ws.connect()
       return this.token
     } catch (error) {
-      this.destroy()
+      await this.destroy()
       throw error
     }
   }
@@ -119,8 +118,7 @@ export class Client extends EventEmitter {
    * Logs out, terminates the connection to Discord, and destroys the client
    */
   public async destroy(): Promise<void> {
-    this.ws.destroy()
-    this.rest.destroy()
+    await this.ws.destroy()
     this.token = null
     this.user = null
     this.readyTimestamp = null
@@ -131,7 +129,7 @@ export class Client extends EventEmitter {
    * Obtains the OAuth Application of this bot from Discord
    */
   public async fetchApplication() {
-    return this.rest.get('/oauth2/applications/@me')
+    return await this.rest.get('/oauth2/applications/@me')
   }
 
   /**
@@ -146,7 +144,7 @@ export class Client extends EventEmitter {
     const query = new URLSearchParams({
       client_id: this.user,
       scope: 'bot applications.commands',
-      permissions
+      permissions,
     })
 
     return `https://discord.com/oauth2/authorize?${query}`

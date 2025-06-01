@@ -1,9 +1,13 @@
-import { ChannelType } from '../../types/api'
 import type { Client } from '../../client/Client'
-import type { ChannelData, MessageData, Snowflake, UserData } from '../../types/structures'
-import { BaseChannel } from './BaseChannel'
+import type {
+  ChannelData,
+  MessageData,
+  Snowflake,
+  UserData,
+} from '../../types/structures'
 import type { Message } from '../Message'
 import type { User } from '../User'
+import { BaseChannel } from './BaseChannel'
 
 /**
  * Represents a DM channel
@@ -14,7 +18,9 @@ export class DmChannel extends BaseChannel {
 
   constructor(client: Client, data: ChannelData) {
     super(client, data)
-    this.recipients = new Set(data.recipients?.map((user: UserData) => user.id) ?? [])
+    this.recipients = new Set(
+      data.recipients?.map((user: UserData) => user.id) ?? [],
+    )
     this.lastMessageId = data.last_message_id ?? null
   }
 
@@ -33,8 +39,7 @@ export class DmChannel extends BaseChannel {
   public async send(
     content: string | { content?: string; embeds?: any[]; files?: any[] },
   ): Promise<Message> {
-    const data =
-      typeof content === 'string' ? { content } : content
+    const data = typeof content === 'string' ? { content } : content
 
     const response = await this.client.rest.post<MessageData>(
       `/channels/${this.id}/messages`,
@@ -47,13 +52,19 @@ export class DmChannel extends BaseChannel {
   /**
    * Get messages in this channel
    * @param options The options for fetching messages
+   * @param options.limit The maximum number of messages to fetch
+   * @param options.before Get messages before this message ID
+   * @param options.after Get messages after this message ID
+   * @param options.around Get messages around this message ID
    */
-  public async getMessages(options: {
-    limit?: number
-    before?: Snowflake
-    after?: Snowflake
-    around?: Snowflake
-  } = {}): Promise<Message[]> {
+  public async getMessages(
+    options: {
+      limit?: number
+      before?: Snowflake
+      after?: Snowflake
+      around?: Snowflake
+    } = {},
+  ): Promise<Message[]> {
     const query = new URLSearchParams()
     if (options.limit) query.set('limit', options.limit.toString())
     if (options.before) query.set('before', options.before)
@@ -97,4 +108,4 @@ export class DmChannel extends BaseChannel {
   public async close(): Promise<void> {
     await this.delete()
   }
-} 
+}
