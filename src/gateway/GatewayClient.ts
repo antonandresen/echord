@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events'
-import process from 'node:process'
+import { platform } from 'node:process'
 import { WebSocket } from 'ws'
 import { Inflate } from 'zlib-sync'
 import {
@@ -43,7 +43,7 @@ export class GatewayClient extends EventEmitter {
     this.intents = options.intents
     this.compress = options.compress ?? true
     this.properties = options.properties ?? {
-      os: process.platform,
+      os: platform,
       browser: 'echord',
       device: 'echord',
     }

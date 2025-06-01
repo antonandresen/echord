@@ -37,7 +37,7 @@ export class Base {
    * @param snowflake The snowflake to decode
    */
   public static decodeSnowflake(snowflake: Snowflake): number {
-    return Number(BigInt(snowflake) >> 22n) + 1420070400000
+    return Number(BigInt(snowflake) >> BigInt(22)) + 1420070400000
   }
 
   /**

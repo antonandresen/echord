@@ -16,7 +16,7 @@ export class CategoryChannel extends BaseChannel {
    */
   public getChildren(): BaseChannel[] {
     const channels: BaseChannel[] = []
-    for (const channel of this.client.channels.cache.values()) {
+    for (const channel of Array.from(this.client.channels.cache.values()) as BaseChannel[]) {
       if (channel.parentId === this.id) {
         channels.push(channel)
       }
